@@ -656,6 +656,14 @@ class M4A_RSS_Item extends Media_RSS_Item
 	}
 }
 
+class OGG_RSS_Item extends Media_RSS_Item
+{
+	public function getType()
+	{
+		return 'audio/mp4';
+	}
+}
+
 abstract class Podcast extends GetterSetter
 {
 	protected $max_mtime = 0;
@@ -839,6 +847,7 @@ class Dir_Podcast extends Podcast
 		{
 			case 'mp3':
 			case 'm4a':
+			case 'ogg':
 				// skip 0-length mp3 files. getID3 chokes on them.
 				if(filesize($filename))
 				{
@@ -846,6 +855,8 @@ class Dir_Podcast extends Podcast
 					$filemtime = filemtime($filename);
 					if(strtolower($file_ext) == 'm4a')
 						$the_item = new M4A_RSS_Item($filename);
+					elseif (strtolower($file_ext) == 'ogg')
+						$the_item = new OGG_RSS_Item($filename);
 					else
 						$the_item = new MP3_RSS_Item($filename);
 					$this->unsorted_items[$filemtime][] = $the_item;
